@@ -11,10 +11,23 @@ app.use(bodyParser.json());
 
 let db = JSON.parse(fs.readFileSync('db.json', 'utf8'));
 
-// Generar rutas CRUD para cada colección del db.json
+// ✅ Ruta especial para buscar usuario por email
+app.get('/users', (req, res) => {
+  const { email } = req.query;
+  if (email) {
+    const found = db.users.filter(user => user.email === email);
+    res.json(found);
+  } else {
+    res.json(db.users);
+  }
+});
+
+// CRUD genérico para cada colección
 Object.keys(db).forEach((key) => {
-  // GET ALL
-  app.get(`/${key}`, (req, res) => res.json(db[key]));
+  // GET ALL (excepto users, ya manejado arriba)
+  if (key !== 'users') {
+    app.get(`/${key}`, (req, res) => res.json(db[key]));
+  }
 
   // GET BY ID
   app.get(`/${key}/:id`, (req, res) => {
@@ -50,5 +63,5 @@ Object.keys(db).forEach((key) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`API RAJE corriendo en puerto ${PORT}`);
+  console.log(`API STAYMAP corriendo en puerto ${PORT}`);
 });
