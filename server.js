@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 
 let db = JSON.parse(fs.readFileSync('db.json', 'utf8'));
 
-// ✅ Ruta especial para buscar usuario por email
+// Ruta especial para buscar usuario por email
 app.get('/users', (req, res) => {
   const { email } = req.query;
   if (email) {
